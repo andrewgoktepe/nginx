@@ -17,6 +17,17 @@
 # limitations under the License.
 #
 
+case node["platform_family"]
+when 'debian'
+  package 'libldap2-dev' do
+    action :install
+  end
+when 'rhel'
+  package 'libldap2-devel' do
+    action :install
+  end
+end
+
 git "#{Chef::Config[:file_cache_path]}/nginx-auth-ldap" do
   repository node['nginx']['ldap']['url']
   revision   node['nginx']['ldap']['revision']
@@ -25,3 +36,4 @@ end
 
 node.run_state['nginx_configure_flags'] =
   node.run_state['nginx_configure_flags'] | ["--add-module=#{Chef::Config[:file_cache_path]}/nginx-auth-ldap"]
+
